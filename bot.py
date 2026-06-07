@@ -149,6 +149,18 @@ async def get_user(interaction: discord.Interaction, username: str) -> discord.M
 @app_commands.describe(username="Who to add kklub")
 async def add_kklub(interaction: discord.Interaction, username: str):
     await interaction.response.defer()
+
+    # Tell them to fuck off if they try to kkclub the bot
+    user = await get_user(interaction, username)
+    if user is None:
+        await interaction.followup.send("Invalid User. Use the format @(Name of Person)")
+        return
+    roles = [role.name for role in user.roles]
+
+    if not (roles.__contains__("Pledges") or roles.__contains__("Actives")):
+        await interaction.followup.send("Invalid user! Only Actives or Pledges can be KKlubbed!")
+        return
+    
     points = blacklist_database.get_user_point(interaction.user.id)
     if points > 0:
         await interaction.followup.send("You are not allowed to kklub someone")

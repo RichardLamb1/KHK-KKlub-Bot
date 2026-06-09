@@ -1,3 +1,4 @@
+import datetime
 import sqlite3
 import asyncio
 
@@ -36,6 +37,12 @@ async def setup_hook():
 @bot.event
 async def on_ready():
     print("KKlub Bot is running")
+
+    # Set the bot status and activity message
+    await bot.change_presence(
+        status=discord.Status.online, 
+        activity=discord.CustomActivity(name="🍻 Lemme see them MUG CHUGS!")
+    )
 
 
 ##DATABASE CODE - Stuff that gets reused a fuck ton
@@ -155,6 +162,11 @@ async def add_kklub(interaction: discord.Interaction, username: str):
     if user is None:
         await interaction.followup.send("Invalid User. Use the format @(Name of Person)")
         return
+    
+    if user == bot.user:
+        await interaction.followup.send("Fuck you!")
+        return
+
     roles = [role.name for role in user.roles]
 
     if not (roles.__contains__("Pledges") or roles.__contains__("Actives")):

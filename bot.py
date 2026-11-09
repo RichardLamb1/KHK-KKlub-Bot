@@ -108,6 +108,8 @@ async def leaderboard(interaction: discord.Interaction, database: db.Database, t
                 user = bot.get_user(int(row[1]))
                 if user is None:
                     continue
+                if row[2] == 0: # Skip users with zero points
+                    continue
                 member = interaction.guild.get_member(user.id)
                 if member is None:
                     continue
